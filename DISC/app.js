@@ -1,4 +1,5 @@
 const express = require('express');
+// const bodyParser = require('body-parser')
 const app = express();
 const port = 3000;
 // Sample data (can be replaced with your own data)
@@ -219,6 +220,63 @@ app.post('/disc', (req, res) => {
     console.log(careers[maxValue])
     res.send(careers[maxValue]);
 });
+
+
+
+const ptest={
+  "positive":["is talkative","Does a through job","Is depressed,blue","Is original, comes up with new ideas","is helpful and unselfish with others","Is curious about many different things","Is full of energy","Is a reliable worker", "Can be tense","Is ingenious, a deep thinker",'Generates a lot of enthusiasm',"Has a forgiving nature","Worries a lot","Has an active imagination","Is generally trusting","is inventive","Has an assertive personality","Perserves until the task is finished","Can be moody","Values artistic,aesthetic experiences","Is considerate and kind to almost everyone","Does things efficiently","Is outgoing,sociable","Makes plans and follows through with them","Gets nervous easily","Likes to reflect, play with ideas","Likes to cooperate with others","Is sophisticated in art,music or literature"],
+  "negative":["Tends to find fault with others","Is reserved","Can be somewhat careless","Is relaxed,handles stress well","c","Tends to be disorganized","Tends to be quiet","Tends to be lazy","Is emotionally stable,not easily upset","Can be cold and aloof","Is sometimes shy, inhibited","Remains calm in tense situations","Prefers work that is routine","Is sometimes rude to others","Has few artistic interests","Likes to cooperate with others","Is easily distracted"]
+}
+// EACNO
+const ptestAns=[
+  {
+    "question":"is talkative",
+    "ans":"E" 
+  },
+  {
+    "question":"Is reserved",
+    "ans":"A" 
+  },
+  {
+    "question":'Is reserved',
+    "ans":"C" 
+  },
+  {
+    "question":"is helpful and unselfish with others",
+    "ans":"N" 
+  }
+]
+app.get('/personalityTest', (req, res) => {
+  let totalScore = 0;
+  // first index is for normal scoring and 2nd index is for reverse scoring
+  const valueMapping = {
+    'E': [1, 5],
+    'A': [2, 4],
+    'C': [3, 3],
+    'N': [4, 2],
+    'O': [5, 1],
+  };
+
+  for (let index = 0; index < ptestAns.length; index++) {
+    const question = ptestAns[index].question;
+    const answer = ptestAns[index].ans;
+    
+    const category = ptest.positive.includes(question) ? 'positive' : 'negative';
+    const value = valueMapping[answer];
+
+    if (category === 'positive') {
+      totalScore += value[0];
+    } else if (category === 'negative') {
+      totalScore += value[1];
+    }
+  }
+  const responseObj = {
+    ptestAns: ptestAns,
+    totalScore: totalScore
+  };
+  res.json(responseObj)
+});
+
 
 // Start the server
 app.listen(port, () => {
